@@ -1,6 +1,8 @@
 import {FlatList, Dimensions,Text, View, StyleSheet } from "react-native";
 import React, {useState, useEffect} from "react"
 
+import Header from "@/component/header";
+
 
 
 const {height} = Dimensions.get('window');
@@ -53,6 +55,8 @@ const HomeScreen: React.FC = () => {
 
 
   return (
+    <View style={{flex:1}}>
+    <Header />
     <FlatList
       data={video}
       keyExtractor={(item) => item.id}
@@ -67,6 +71,7 @@ const HomeScreen: React.FC = () => {
       )}
       pagingEnabled
     />
+    </View>
   );
 };
 

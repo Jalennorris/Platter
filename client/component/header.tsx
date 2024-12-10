@@ -1,17 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity,  } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Header: React.FC = () => {
   return (
+<SafeAreaView style={styles.SafeArea}>
     <View style={styles.container}>
     
       <View style={styles.logoContainer}>
-        <Image
-          source={{ uri: "https://example.com/logo.png" }} 
-          style={styles.logo}
-        />
-        <Text style={styles.title}>FoodScroll</Text>
+        <Text style={styles.title}>Platter</Text>
       </View>
 
       
@@ -19,18 +17,17 @@ const Header: React.FC = () => {
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons name="search" size={24} color="#fff" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <MaterialIcons name="notifications-none" size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="person-circle-outline" size={24} color="#fff" />
-        </TouchableOpacity>
       </View>
     </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+    SafeArea:{
+      backgroundColor: "#000",
+    },
+
   container: {
     height: 60,
     flexDirection: "row",
@@ -51,8 +48,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 35,
     fontWeight: "bold",
+    marginTop: 5,
   },
   iconsContainer: {
     flexDirection: "row",

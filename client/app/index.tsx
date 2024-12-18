@@ -101,7 +101,7 @@ const HomeScreen: React.FC = () => {
               resizeMode="cover"
               controls={true}
             />
-            {loading && <ActivityIndicator size="large" color="#fff" />}
+            {loading && <ActivityIndicator size="large" color="#000" />}
 
             {openComments ? (
               <Animated.View
@@ -118,7 +118,7 @@ const HomeScreen: React.FC = () => {
                   onPress={handleOpenComments}
                 />
                 <Text style={styles.commentsTitle}>Comments</Text>
-                <Ionicons name="person-circle" size={40} color="white" style={styles.profileIcon} />
+                <Ionicons name="person-circle" size={40} color="000" style={styles.profileIcon} />
                 <TextInput
                   placeholder="Add a comment..."
                   placeholderTextColor={"#fff"}
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
     height,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000",
-    borderBottomColor: "#333",
+    backgroundColor: "#fff", // Video section white
+    borderBottomColor: "#ddd",
     borderBottomWidth: 1,
-    borderTopColor: "#333",
+    borderTopColor: "#ddd",
   },
   title: {
-    color: "#fff",
+    color: "#333", // Change title text to dark for contrast
     fontSize: 20,
     marginBottom: 10,
   },
@@ -215,9 +215,6 @@ const styles = StyleSheet.create({
   profileIcon: {
     transform: [{ translateX: -320 }, { translateY: 60 }],
   },
- 
- 
-  
 });
 
 export default HomeScreen;

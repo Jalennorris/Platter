@@ -2,10 +2,32 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import axios from 'axios';
+
+type UserInfo = {
+    username: string;
+  
+};
 
 const Profile: React.FC = () => {
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const [post, setPost] = useState([]); // State for posts
     const router = useRouter();
+    const id = 6;
+
+    const handleGetUserInfor = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/users/${id}`)
+            setUserInfo(response.data)
+            console.log(response.data)
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+
+
+    }
 
     return (
         <View style={styles.container}>
@@ -15,7 +37,9 @@ const Profile: React.FC = () => {
                     <TouchableOpacity onPress={() => router.push('/')} style={styles.backButton}>
                         <Ionicons name="arrow-back" size={30} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.username}>Username</Text>
+                    {userInfo && userInfo.username && (
+                        <Text style={styles.username}>{userInfo.username}</Text>
+                    )}
                     <TouchableOpacity>
                         <Ionicons name="ellipsis-vertical" size={24} color="black" />
                     </TouchableOpacity>

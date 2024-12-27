@@ -1,51 +1,61 @@
-import {View, Text, StyleSheet, Button, TouchableOpacity, Image, Dimensions} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import loginImage from '../assets/images/login.svg';
 import * as Google from 'expo-auth-session/providers/google';
-import {useRouter} from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
-type Credentails = {
-  username: string,
-  password: string,
+type Credentials = {
+  username: string;
+  password: string;
 };
-
-const { width, height } = Dimensions.get('window');
 
 const Login: React.FC = () => {
   const router = useRouter();
-  const [credentials, setCredentails] = useState<Credentails>({
+  const [credentials, setCredentials] = useState<Credentials>({
     username: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>('');
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: 'neural-cortex-444613-n3',
+    clientId: 'neural-cortex-444613-n3', // Replace with your actual client ID
   });
 
   useEffect(() => {
     if (response?.type === 'success') {
       const { authentication } = response;
       console.log('Google Authentication Successful: ', authentication);
+      // Handle successful login with Google
+      // Example: redirect to a dashboard or save the token
     }
   }, [response]);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!credentials.username || !credentials.password) {
       setError('Please fill in all fields');
       return;
     }
 
-    if (credentials.username === 'admin' && credentials.password === '123') {
-      router.push('/');
-    } else {
-      setError('Password or username is incorrect');
+    setLoading(true); // Start the loading state
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/users/login', credentials);
+      console.log('Successfully logged in:', response.data);
+      // Handle success (e.g., save token, navigate to a new screen)
+      setLoading(false);
+      router.push('/')
+    } catch (error) {
+      console.error('Login failed:', error);
+      setError('Login failed. Please try again.');
+      setLoading(false); // Stop the loading state
     }
   };
 
-  const handleChange = (name: keyof Credentails, value: string) => {
-    setCredentails({ ...credentials, [name]: value });
+  const handleChange = (name: keyof Credentials, value: string) => {
+    setCredentials({ ...credentials, [name]: value });
   };
 
   return (
@@ -73,9 +83,13 @@ const Login: React.FC = () => {
           value={credentials.password}
           onChangeText={(text) => handleChange('password', text)}
         />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Log In</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Log In</Text>
+          </TouchableOpacity>
+        )}
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -113,21 +127,20 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: height * 0.02, // 5% from the top
-    left: width * 0.05, // 5% from the left
+    top: 50, // Fixed top position
+    left: 20, // Fixed left position
   },
   loginImage: {
     resizeMode: 'contain',
-    width: width * 0.8, // 80% of screen width
-    height: height * 0.28, // 30% of screen height
+    width: 250, // Set a fixed width for the image
+    height: 150, // Set a fixed height for the image
     marginBottom: 20,
   },
   title: {
-    top: 100,
-    fontSize: width * 0.08, // Scales font size based on width
-    alignSelf: 'flex-start',
+    fontSize: 30, // Set a fixed font size for the title
     fontWeight: 'bold',
-    marginBottom: 30,
+    alignSelf: 'flex-start',
+    marginBottom: 20,
   },
   inputContainer: {
     width: '90%',
@@ -137,7 +150,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
+    marginBottom: 15,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 20,
@@ -145,27 +158,24 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'black',
-    paddingVertical: height * 0.015, // Dynamic padding
-    paddingHorizontal: width * 0.05,
+    paddingVertical: 12, // Fixed padding
+    paddingHorizontal: 40, // Fixed padding
     borderRadius: 20,
   },
   buttonText: {
     color: 'white',
-    fontSize: width * 0.05,
+    fontSize: 18, // Fixed font size for the button text
     textAlign: 'center',
     fontWeight: 'bold',
   },
   text: {
     color: 'gray',
     marginTop: 20,
-    paddingVertical: 10,
-    cursor: 'pointer',
-    fontSize: width * 0.04, // Scales for readability
+    fontSize: 16, // Fixed font size
   },
   linkText: {
     color: 'blue',
-    fontSize: width * 0.04,
-    cursor: 'pointer',
+    fontSize: 16, // Fixed font size
   },
   googleButtonContent: {
     backgroundColor: 'black',
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
   },
   googleButtonText: {
     color: 'white',
-    fontSize: width * 0.04,
+    fontSize: 16, // Fixed font size
     textAlign: 'center',
     fontWeight: 'bold',
   },
@@ -193,7 +203,7 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 10,
     textAlign: 'center',
-    fontSize: width * 0.04,
+    fontSize: 16, // Fixed font size
   },
 });
 
